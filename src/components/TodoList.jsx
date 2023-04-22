@@ -1,16 +1,15 @@
-
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import {useParams} from 'react-router-dom';
 import { removeTodo, toggleTodo } from "../store/todos/todos-actions";
-import { selectVisibleTodos } from "../store/todos/todos-selectors";
-import { selectActiveFilters } from "../store/filters/filter-selectors";
+import {selectVisibleTodos} from '../store/todos/todos-selectors';
 
 
 
 export const TodoList = () => {
   const dispatch = useDispatch();
+  const {filter} = useParams();
+  const todos = useSelector(state => selectVisibleTodos(state, filter));
 
-  const activeFilter = useSelector(selectActiveFilters);
-  const todos = useSelector(state => selectVisibleTodos(state, activeFilter));
 
   return (
     <ul>
@@ -18,11 +17,10 @@ export const TodoList = () => {
         <li key={todo.title}>
           <input
             type="checkbox"
-            checkbox={todo.completed}
+            checked={todo.completed}
             onChange={() => dispatch(toggleTodo(todo.id))}
-          />
-          {todo.title}
-          {""}
+          />{" "}
+          {todo.title}{" "}
           <button onClick={() => dispatch(removeTodo(todo.id))}>delete</button>
         </li>
       ))}
